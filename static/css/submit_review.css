@@ -1,0 +1,22 @@
+/* تنسيق النجوم النشطة */
+.star-active {
+    color: #fbbf24 !important; /* اللون الأصفر للنجوم */
+}
+
+.star-active span {
+    font-variation-settings: 'FILL' 1 !important;
+}
+
+/* تحسين شكل منطقة الرفع */
+.upload-area:hover {
+    border-color: #1754cf;
+}
+
+.upload-area:hover span {
+    color: #1754cf;
+}
+
+/* توافق الخطوط مع التصميم */
+body {
+    font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
+}

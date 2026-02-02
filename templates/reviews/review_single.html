@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}تجربة {{ review.user.name }} مع {{ review.company.name }}{% endblock %}
+
+{% block content %}
+<main class="max-w-4xl mx-auto py-12 px-4">
+    <a href="{% url 'home' %}" class="flex items-center gap-2 text-[#93a5c8] hover:text-white mb-8 transition-colors">
+        <span class="material-symbols-outlined">arrow_forward</span>
+        العودة للرئيسية
+    </a>
+
+    <div class="bg-[#1b2231] rounded-2xl border border-[#243047] overflow-hidden shadow-2xl">
+        <div class="p-8 border-b border-[#243047] bg-[#111621]/50">
+            <div class="flex flex-wrap justify-between items-start gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center text-primary text-2xl font-bold">
+                        {{ review.user.name|slice:":1" }}
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">{{ review.user.name }}</h1>
+                        <div class="flex items-center gap-2 text-[#93a5c8] mt-1">
+                            <span class="material-symbols-outlined text-sm">location_on</span>
+                            <span>كتب من: {{ review.country }}</span> </div>
+                    </div>
+                </div>
+                <div class="text-left">
+                    <div class="flex gap-1 mb-1">
+                        {% for i in "12345"|make_list %}
+                            <span class="material-symbols-outlined {% if forloop.counter <= review.rating %}text-yellow-400{% else %}text-slate-600{% endif %}">star</span>
+                        {% endfor %}
+                    </div>
+                    <p class="text-xs text-slate-500">{{ review.created_at|date:"d M Y" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-8 space-y-6">
+            <div class="prose prose-invert max-w-none">
+                <p class="text-lg text-slate-300 leading-relaxed italic">
+                    "{{ review.comment }}"
+                </p>
+            </div>
+
+            {% if review.media %}
+            <div class="mt-8">
+                <p class="text-sm font-bold text-white mb-4">الدليل المرفق:</p>
+                <img src="{{ review.media.url }}" alt="دليل المراجعة" class="rounded-lg border border-[#243047] max-w-full h-auto hover:scale-[1.02] transition-transform cursor-pointer">
+            </div>
+            {% endif %}
+
+            {% if review.is_problematic %}
+            <div class="bg-red-500/10 border border-red-500/20 p-4 rounded-xl flex items-center gap-3">
+                <span class="material-symbols-outlined text-red-500">report</span>
+                <p class="text-red-500 text-sm font-bold">هذه المراجعة مصنفة كبلاغ عن مشكلة (سحب أو دعم فني).</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="p-6 bg-[#111621]/30 border-t border-[#243047] flex justify-between items-center">
+            <p class="text-sm text-[#93a5c8]">هل كانت هذه المراجعة مفيدة؟</p>
+            <div class="flex gap-4">
+                <button class="flex items-center gap-2 text-sm hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">thumb_up</span> نعم
+                </button>
+                <button class="flex items-center gap-2 text-sm hover:text-red-400 transition-colors">
+                    <span class="material-symbols-outlined">thumb_down</span> لا
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

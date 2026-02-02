@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ملف المستخدم - {{ profile_user.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
+{% endblock %}
+{% block content %}
+<main class="max-w-5xl mx-auto py-12 px-4">
+    <div class="bg-[#1b2231] p-8 rounded-2xl border border-[#243047] mb-10 flex items-center gap-6">
+        <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-3xl font-bold">
+            {{ profile_user.name|slice:":1" }}
+        </div>
+        <div>
+            <h1 class="text-3xl font-bold text-white">{{ profile_user.name }}</h1>
+            <p class="text-[#93a5c8]">إجمالي المراجعات: {{ user_reviews.count }}</p>
+            <p class="text-sm text-slate-500">عضو منذ: {{ profile_user.id }}#</p>
+        </div>
+    </div>
+
+    <h2 class="text-xl font-bold mb-6 text-white text-right">جميع التجارب السابقة</h2>
+    
+    <div class="space-y-6">
+        {% for review in user_reviews %}
+        <div class="bg-[#1b2231] p-6 rounded-xl border border-[#243047] hover:border-primary/50 transition-all">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex gap-1">
+                    {% for i in "12345"|make_list %}
+                        <span class="material-symbols-outlined {% if forloop.counter <= review.rating %}text-yellow-400{% else %}text-slate-600{% endif %}">star</span>
+                    {% endfor %}
+                </div>
+                <span class="text-xs text-slate-500">{{ review.created_at|date:"d M Y" }}</span>
+            </div>
+            <p class="text-slate-300 leading-relaxed mb-4">{{ review.comment }}</p>
+            <a href="{% url 'review_detail' review.id %}" class="text-primary text-sm font-bold flex items-center gap-1">
+                عرض التفاصيل <span class="material-symbols-outlined text-sm">open_in_new</span>
+            </a>
+        </div>
+        {% empty %}
+        <p class="text-center text-slate-500">لا توجد مراجعات لهذا المستخدم بعد.</p>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

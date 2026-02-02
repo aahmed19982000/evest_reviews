@@ -1,0 +1,42 @@
+/* تنسيقات الهيدر والفوتر المستوحاة من التصميم */
+:root {
+    --bg-dark: #111621;
+    --border-color: #243047;
+    --text-muted: #93a5c8;
+    --primary-blue: #1754cf;
+}
+
+header {
+    background-color: rgba(17, 22, 33, 0.8) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+header nav a {
+    color: var(--text-muted) !important;
+    transition: color 0.3s ease;
+}
+
+header nav a:hover {
+    color: white !important;
+}
+
+header .logo-text {
+    font-weight: 900;
+    font-family: 'Inter', sans-serif;
+}
+
+footer {
+    background-color: #0d121c !important;
+    border-top: 1px solid var(--border-color) !important;
+    color: var(--text-muted);
+}
+
+footer h4 {
+    color: white !important;
+    font-weight: 700;
+}
+
+footer a:hover {
+    color: var(--primary-blue) !important;
+}

@@ -1,0 +1,70 @@
+/* تنسيقات الملف الشخصي للمستخدم */
+
+/* 1. تأثيرات الصورة الرمزية (Avatar) */
+.w-20.h-20.bg-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 2. تحسين بطاقة المستخدم الرئيسية */
+.bg-\[\#1b2231\] {
+    backdrop-filter: blur(10px);
+}
+
+/* 3. تنسيق النجوم */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.text-yellow-400 {
+    color: #fbbf24;
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.3);
+}
+
+/* 4. تأثيرات الحوم (Hover) على بطاقات المراجعة */
+.transition-all {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover\:border-primary\/50:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background-color: #212a3d;
+}
+
+/* 5. تحسين روابط "عرض التفاصيل" */
+.text-primary {
+    color: #3b82f6;
+    text-decoration: none;
+    position: relative;
+}
+
+.text-primary:hover {
+    color: #60a5fa;
+}
+
+/* 6. تنسيق النصوص */
+p.text-slate-300 {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    border-right: 3px solid #243047;
+    padding-right: 15px;
+}
+
+/* 7. تجاوب الشاشات الصغيرة */
+@media (max-width: 640px) {
+    .flex.items-center.gap-6 {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .text-right {
+        text-align: center !important;
+    }
+    
+    .flex.justify-between.items-start {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

@@ -1,0 +1,44 @@
+:root {
+    --bg-dark: #111621;
+    --card-bg: #1a2232;
+    --border-color: #344465;
+    --primary-blue: #1754cf;
+    --text-muted: #93a5c8;
+    --danger-red: #ef4444;
+    --success-green: #22c55e;
+}
+
+.company-page-container {
+    color: white;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* بطاقات التصميم الجديد */
+.card-modern {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.card-header-styled {
+    background: rgba(23, 84, 207, 0.1);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem;
+    font-weight: bold;
+}
+
+/* شريط التقدم (الشكاوى) */
+.progress-container {
+    height: 0.375rem;
+    width: 100%;
+    background-color: var(--border-color);
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 9999px;
+}

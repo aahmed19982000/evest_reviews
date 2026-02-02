@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}إرسال تقييم - {{ company.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/submit_review.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="max-w-[1200px] mx-auto py-10">
+    <div class="mb-10 px-4 lg:px-0">
+        <h1 class="text-3xl lg:text-4xl font-bold mb-3 text-white">شارك تجربتك مع {{ company.name }} بكل شفافية</h1>
+        <p class="text-[#93a5c8] max-w-2xl">تساعد تقييماتك الصادقة المستثمرين الآخرين في اتخاذ قرارات مدروسة حول منصات التداول.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 px-4 lg:px-0">
+        <div class="lg:col-span-8 space-y-8">
+            <div class="bg-[#1b2231] rounded-xl p-6 lg:p-8 border border-[#243047] shadow-sm">
+                <form method="POST" enctype="multipart/form-data" class="space-y-8">
+                    {% csrf_token %}
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-[#111621]/30 rounded-xl border border-[#243047]/50">
+                        <div class="space-y-3">
+                            <label class="text-sm font-bold block text-[#93a5c8]">الاسم الكامل</label>
+                            <input type="text" name="name" required 
+                                   class="w-full bg-[#111621] border border-[#243047] rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary outline-none text-white placeholder:text-slate-600" 
+                                   placeholder="أدخل اسمك الحقيقي">
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-sm font-bold block text-[#93a5c8]">البريد الإلكتروني</label>
+                            <input type="email" name="email" required 
+                                   class="w-full bg-[#111621] border border-[#243047] rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary outline-none text-white placeholder:text-slate-600" 
+                                   placeholder="example@mail.com">
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-sm font-bold block text-[#93a5c8]">رقم الهاتف</label>
+                            <input type="text" name="mobile" required 
+                                   class="w-full bg-[#111621] border border-[#243047] rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary outline-none text-white placeholder:text-slate-600" 
+                                   placeholder="+966 50 000 0000">
+                        </div>
+                        <p class="text-[10px] text-slate-500 md:col-span-3">لن يتم نشر بيانات الاتصال الخاصة بك علناً، نطلبها فقط لتوثيق التجربة.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <label class="text-lg font-bold block text-white">تقييمك العام</label>
+                        <div class="flex items-center gap-2">
+                            <div class="flex flex-row-reverse gap-1" id="star-rating">
+                                {% for i in "54321"|make_list %}
+                                <button type="button" class="star-btn text-slate-600 hover:text-yellow-400 transition-colors" data-value="{{ i }}">
+                                    <span class="material-symbols-outlined text-4xl">star</span>
+                                </button>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="rating" id="rating-input" value="5" required>
+                            <span class="text-[#93a5c8] mr-4 text-sm">(اضغط للتقييم)</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="text-lg font-bold block text-white">نوع التجربة</label>
+                        <div class="relative">
+                            <select name="experience_type" id="exp-select" onchange="toggleOtherInput()" 
+                                    class="w-full bg-[#111621] border border-[#243047] rounded-lg py-3 px-4 appearance-none focus:ring-2 focus:ring-primary outline-none text-white">
+                                <option value="" disabled selected>اختر نوع التجربة</option>
+                                {% for type in experience_types %}
+                                    <option value="{{ type.id }}">{{ type.name }}</option>
+                                {% endfor %}
+                                <option value="other">أخرى (يرجى تحديد السبب)</option>
+                            </select>
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none material-symbols-outlined text-[#93a5c8]">expand_more</span>
+                        </div>
+                    </div>
+                    
+                    <div id="other-reason-container" class="hidden space-y-3 mt-3 animate-fade-in">
+                        <label class="text-sm font-bold block text-[#93a5c8]">يرجى كتابة نوع التجربة</label>
+                        <input type="text" name="other_reason" id="other_reason"
+                               class="w-full bg-[#111621] border border-primary/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary outline-none text-white placeholder:text-slate-600" 
+                               placeholder="مثلاً: سرعة تنفيذ العقود">
+                    </div>
+                    
+                    <script>
+                    function toggleOtherInput() {
+                        const select = document.getElementById('exp-select');
+                        const container = document.getElementById('other-reason-container');
+                        const input = document.getElementById('other_reason');
+                        
+                        if (select.value === 'other') {
+                            container.classList.remove('hidden');
+                            input.setAttribute('required', 'required'); // جعل الحقل مطلوباً إذا اختار أخرى
+                        } else {
+                            container.classList.add('hidden');
+                            input.removeAttribute('required');
+                        }
+                    }
+                    </script>
+
+                    <div class="space-y-3">
+                        <label class="text-lg font-bold block text-white">تفاصيل المراجعة</label>
+                        <textarea name="comment" required minlength="10"
+                                  class="w-full bg-[#111621] border border-[#243047] rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary outline-none text-white placeholder:text-slate-600" 
+                                  placeholder="اكتب تفاصيل تجربتك هنا..." rows="6"></textarea>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="text-lg font-bold block text-white">إرفاق دليل (اختياري)</label>
+                        <div class="upload-area border-2 border-dashed border-[#243047] rounded-xl p-8 flex flex-col items-center justify-center bg-[#111621]/50 hover:bg-[#111621] transition-all cursor-pointer" 
+                             onclick="document.getElementById('media-upload').click()">
+                            <span class="material-symbols-outlined text-5xl text-slate-600 mb-3">cloud_upload</span>
+                            <p class="text-sm font-medium mb-1 text-white">اسحب وأفلت لقطات الشاشة هنا</p>
+                            <input type="file" name="media" id="media-upload" class="hidden" accept="image/*">
+                            <p id="file-name" class="text-xs text-primary mt-2 font-bold"></p>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl text-lg transition-all shadow-xl shadow-primary/30 flex items-center justify-center gap-3">
+                        <span class="material-symbols-outlined">send</span>
+                        نشر التقييم الآن
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <aside class="lg:col-span-4 space-y-6">
+            <div class="bg-[#1b2231] rounded-xl p-6 border border-[#243047] sticky top-10">
+                <div class="flex items-center gap-2 mb-4 text-primary">
+                    <span class="material-symbols-outlined">verified_user</span>
+                    <h3 class="font-bold text-lg text-white">لماذا نطلب هويتك؟</h3>
+                </div>
+                <ul class="space-y-4 text-sm text-[#93a5c8]">
+                    <li class="flex gap-2">
+                        <span class="text-primary">•</span>
+                        <span>لضمان أن التقييمات صادرة عن أشخاص حقيقيين وليس "روبوتات".</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <span class="text-primary">•</span>
+                        <span>ليتمكن فريق الدعم من التواصل معك إذا أبلغت عن مشكلة سحب.</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+</main>
+
+<script>
+    const stars = document.querySelectorAll('.star-btn');
+    const ratingInput = document.getElementById('rating-input');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const val = this.getAttribute('data-value');
+            ratingInput.value = val;
+            stars.forEach(s => {
+                s.style.color = parseInt(s.getAttribute('data-value')) <= val ? '#fbbf24' : '#475569';
+            });
+        });
+    });
+
+    document.getElementById('media-upload').addEventListener('change', function() {
+        if(this.files.length > 0) {
+            document.getElementById('file-name').textContent = "تم اختيار: " + this.files[0].name;
+        }
+    });
+</script>
+{% endblock %}
