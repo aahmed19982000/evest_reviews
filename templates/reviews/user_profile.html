@@ -1,45 +1,191 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}ملف المستخدم - {{ profile_user.name }}{% endblock %}
+{% block title %} جميع تجارب المتداول - {{ profile_user.name }}  مع شركة ايفست {% endblock %}
+{% block meta_description %}  هذه الصفحة تحتوي على جميع تجارب وتلقيات المتداول {{ profile_user.name }} مع شركة ايفست للتداول وتحتوي ايضا على صورة واثبات قد قدمها لتجربته مع الشركة  {% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
-{% endblock %}
 {% block content %}
 <main class="max-w-5xl mx-auto py-12 px-4">
-    <div class="bg-[#1b2231] p-8 rounded-2xl border border-[#243047] mb-10 flex items-center gap-6">
-        <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-3xl font-bold">
+    <div class="bg-[#1b2231] p-8 rounded-2xl border border-[#243047] mb-10 flex flex-col md:flex-row items-center gap-6 text-center md:text-right">
+        <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg shadow-primary/20">
             {{ profile_user.name|slice:":1" }}
         </div>
-        <div>
-            <h1 class="text-3xl font-bold text-white">{{ profile_user.name }}</h1>
-            <p class="text-[#93a5c8]">إجمالي المراجعات: {{ user_reviews.count }}</p>
-            <p class="text-sm text-slate-500">عضو منذ: {{ profile_user.id }}#</p>
+        <div class="flex-1">
+            <h1 class="text-3xl font-bold text-white mb-1">{{ profile_user.name }}</h1>
+            <div class="flex flex-wrap justify-center md:justify-start gap-4 text-sm mt-2">
+                <p class="text-[#93a5c8] flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">reviews</span>
+                    إجمالي المراجعات: {{ user_reviews.count }}
+                </p>
+                {% if user_reviews.first.country %}
+                <p class="text-primary flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">location_on</span>
+                    {{ user_reviews.first.country }}
+                </p>
+                {% endif %}
+            </div>
         </div>
     </div>
 
-    <h2 class="text-xl font-bold mb-6 text-white text-right">جميع التجارب السابقة</h2>
+    <h2 class="text-xl font-bold mb-6 text-white text-right flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary"></span>
+        جميع التجارب السابقة
+    </h2>
     
-    <div class="space-y-6">
+    <div class="space-y-6 mb-16">
         {% for review in user_reviews %}
         <div class="bg-[#1b2231] p-6 rounded-xl border border-[#243047] hover:border-primary/50 transition-all">
             <div class="flex justify-between items-start mb-4">
                 <div class="flex gap-1">
                     {% for i in "12345"|make_list %}
-                        <span class="material-symbols-outlined {% if forloop.counter <= review.rating %}text-yellow-400{% else %}text-slate-600{% endif %}">star</span>
+                        <span class="material-symbols-outlined text-sm {% if forloop.counter <= review.rating %}text-yellow-400{% else %}text-slate-600{% endif %}">star</span>
                     {% endfor %}
                 </div>
                 <span class="text-xs text-slate-500">{{ review.created_at|date:"d M Y" }}</span>
             </div>
-            <p class="text-slate-300 leading-relaxed mb-4">{{ review.comment }}</p>
-            <a href="{% url 'review_detail' review.id %}" class="text-primary text-sm font-bold flex items-center gap-1">
-                عرض التفاصيل <span class="material-symbols-outlined text-sm">open_in_new</span>
-            </a>
+            
+            <p class="text-slate-300 leading-relaxed mb-4 text-sm">"{{ review.comment }}"</p>
+
+            {% if review.replies.all %}
+            <div class="flex flex-col gap-3 mb-6 border-r-2 border-primary/20 pr-4 mr-2">
+                {% for reply in review.replies.all %}
+                <div class="bg-[#111621]/40 p-3 rounded-lg border border-[#243047]/50">
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="size-5 rounded-full bg-primary/20 flex items-center justify-center text-[10px] text-primary font-bold">
+                            {{ reply.user.name|slice:":1" }}
+                        </div>
+                        <span class="text-white text-[11px] font-bold">{{ reply.user.name }}</span>
+                        <span class="text-[9px] text-slate-500">• {{ reply.created_at|timesince }}</span>
+                    </div>
+                    <p class="text-[#93a5c8] text-xs leading-relaxed text-right">{{ reply.reply_text }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="flex justify-between items-center border-t border-[#243047] pt-4">
+                <div class="flex items-center gap-4">
+                    <a href="{% url 'review_detail' review.id %}" class="text-primary text-xs font-bold flex items-center gap-1">
+                        عرض التفاصيل <span class="material-symbols-outlined text-sm">arrow_left</span>
+                    </a>
+                    
+                    <button onclick="openReplyModal('{{ review.id }}', '{{ profile_user.name }}')" 
+                            class="text-slate-400 hover:text-primary text-[11px] flex items-center gap-1 transition-colors">
+                        <span class="material-symbols-outlined text-sm">reply</span>
+                        إضافة رد
+                    </button>
+                </div>
+
+                {% if review.country %}
+                <span class="text-[10px] text-slate-500 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[12px]">public</span>
+                    {{ review.country }}
+                </span>
+                {% endif %}
+            </div>
         </div>
         {% empty %}
-        <p class="text-center text-slate-500">لا توجد مراجعات لهذا المستخدم بعد.</p>
+        <p class="text-center text-slate-500 py-10">لا توجد مراجعات حالياً.</p>
         {% endfor %}
     </div>
+
+    <div class="pt-10 border-t border-[#243047]">
+        <h2 class="text-xl font-bold mb-6 text-white text-right flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary"></span>
+            إثباتات وصور المراجعات
+        </h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {% for review in user_reviews %}
+                {% if review.media %}
+                <div class="group relative aspect-square rounded-xl overflow-hidden border border-[#243047] hover:border-primary transition-all">
+                    <img src="{{ review.media.url }}" alt="إثبات" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                    <a href="{{ review.media.url }}" target="_blank" class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white">visibility</span>
+                    </a>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 </main>
+
+<div id="replyModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+    <div class="bg-[#1a2232] border border-[#344465] w-full max-w-md rounded-2xl p-6 shadow-2xl scale-95 transition-transform duration-300" id="modalContainer">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-white font-bold flex items-center gap-2 text-right">
+                <span class="material-symbols-outlined text-primary"></span>
+                الرد على تجربة <span id="modalUserName" class="text-primary mx-1"></span>
+            </h3>
+            <button onclick="closeReplyModal()" class="text-[#93a5c8] hover:text-white">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <form action="{% url 'add_reply' %}" method="POST" class="flex flex-col gap-4 text-right" dir="rtl">
+            {% csrf_token %}
+            <input type="hidden" name="review_id" id="modalReviewId">
+            
+            <div class="grid grid-cols-2 gap-2">
+                <div class="flex flex-col gap-1">
+                    <label class="text-[#93a5c8] text-[10px] pr-1">الاسم</label>
+                    <input type="text" name="name" required class="w-full bg-[#111621] border border-[#243047] rounded-lg p-2 text-white text-xs outline-none focus:border-primary" placeholder="اسمك">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-[#93a5c8] text-[10px] pr-1">الجوال</label>
+                    <input type="text" name="mobile" required class="w-full bg-[#111621] border border-[#243047] rounded-lg p-2 text-white text-xs outline-none focus:border-primary" placeholder="رقم الجوال">
+                </div>
+            </div>
+            
+            <div class="flex flex-col gap-1">
+                <label class="text-[#93a5c8] text-[10px] pr-1">البريد الإلكتروني</label>
+                <input type="email" name="email" required class="w-full bg-[#111621] border border-[#243047] rounded-lg p-2 text-white text-xs outline-none focus:border-primary" placeholder="example@mail.com">
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label class="text-[#93a5c8] text-xs pr-1">نص الرد</label>
+                <textarea name="reply_text" required rows="4" 
+                          class="w-full bg-[#111621] border border-[#243047] rounded-xl p-4 text-white text-sm focus:border-primary outline-none resize-none transition-all"
+                          placeholder="اكتب ردك هنا..."></textarea>
+            </div>
+            
+            <button type="submit" class="w-full bg-primary hover:bg-primary/80 text-white font-black py-3 rounded-xl shadow-lg transition-all mt-2">
+                نشر الرد الآن
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openReplyModal(id, name) {
+        const modal = document.getElementById('replyModal');
+        const container = document.getElementById('modalContainer');
+        document.getElementById('modalReviewId').value = id;
+        document.getElementById('modalUserName').innerText = name;
+        
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            container.classList.remove('scale-95');
+            container.classList.add('scale-100');
+        }, 10);
+    }
+
+    function closeReplyModal() {
+        const modal = document.getElementById('replyModal');
+        const container = document.getElementById('modalContainer');
+        container.classList.remove('scale-100');
+        container.classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 200);
+    }
+
+    // إغلاق المودال عند النقر خارجه
+    window.onclick = function(event) {
+        const modal = document.getElementById('replyModal');
+        if (event.target == modal) {
+            closeReplyModal();
+        }
+    }
+</script>
 {% endblock %}

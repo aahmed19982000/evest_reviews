@@ -3,6 +3,10 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 from django.db import models
 from django.utils.text import slugify
+from PIL import Image
+import io
+from django.core.files.base import ContentFile
+
 
 class Company(models.Model):
     # المعلومات الأساسية
@@ -55,6 +59,7 @@ class users(models.Model):
     email = models.EmailField(unique=True)
     mobile = models.CharField(max_length=15,)
     reviews=models.ManyToManyField('Review', related_name='user_reviews', blank=True)
+    country = models.CharField(max_length=100, verbose_name="البلد", blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -66,11 +71,9 @@ class TypeOfExperience(models.Model):
         return self.name
 
 class Review(models.Model):
-    # الحقول الموجودة لديك حالياً...
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='reviews', verbose_name="الشركة", null=True, blank=True)
     user = models.ForeignKey(users, on_delete=models.CASCADE, related_name='my_reviews', verbose_name="المستخدم")
     
-    # أضف هذا الحقل الجديد لربط نوع التجربة ديناميكياً
     experience_type_dynamic = models.ForeignKey(
         'TypeOfExperience', 
         on_delete=models.SET_NULL, 
@@ -79,7 +82,6 @@ class Review(models.Model):
         verbose_name="نوع التجربة"
     )
     
-    # باقي الحقول...
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], verbose_name="التقييم (1-5)")
     comment = models.TextField(verbose_name="التعليق")
     country = models.CharField(max_length=100, verbose_name="البلد")
@@ -88,7 +90,53 @@ class Review(models.Model):
     media = models.FileField(upload_to='review_media/', blank=True, null=True, verbose_name="وسائط المراجعة")
 
     def __str__(self):
-        return f"{self.user.name} - {self.rating} Stars"    
+        return f"{self.user.name} - {self.rating} Stars"
+    
+    
+
+    # --- أضف هذه الدالة لضغط الصور تلقائياً قبل الحفظ ---
+    def save(self, *args, **kwargs):
+        if self.media:
+            # فتح الصورة
+            img = Image.open(self.media)
+            
+            # التأكد من تحويل الصور (مثل PNG الشفاف) إلى صيغة RGB لتقليل الحجم
+            if img.mode in ("RGBA", "P"):
+                img = img.convert("RGB")
+
+            # ضبط الأبعاد القصوى (مثلاً 1000 بكسل عرض) مع الحفاظ على التناسب
+            max_size = (1000, 1000)
+            img.thumbnail(max_size, Image.Resampling.LANCZOS)
+
+            # حفظ الصورة في الذاكرة بضغط 70%
+            output = io.BytesIO()
+            img.save(output, format='JPEG', quality=70) 
+            output.seek(0)
+
+            # استبدال الملف المرفوع بالملف المضغوط
+            # نقوم بتغيير الامتداد إلى .jpg لضمان أقل حجم ممكن
+            new_name = f"{self.media.name.split('.')[0]}.jpg"
+            self.media = ContentFile(output.read(), name=new_name)
+
+        super().save(*args, **kwargs)  
+
+class ReviewReply(models.Model):
+    review = models.ForeignKey(
+        Review, 
+        on_delete=models.CASCADE, 
+        related_name='replies'
+    )
+    # أضف null=True و blank=True هنا
+    user = models.ForeignKey(users, on_delete=models.CASCADE, related_name='user_replies', null=True, blank=True)
+    reply_text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        verbose_name = "رد مستخدم"
+        verbose_name_plural = "ردود المستخدمين"
+
+    def __str__(self):
+        return f"رد من {self.user.name} على {self.review.user.name}"
+    
 
 class Homepage(models.Model):
     meta_title = models.CharField(max_length=200, verbose_name="عنوان الميتا")

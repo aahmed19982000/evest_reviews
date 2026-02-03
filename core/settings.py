@@ -86,6 +86,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # المسار الذي سيتم فيه تجميع الملفات عند الإنتاج (Production)
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 

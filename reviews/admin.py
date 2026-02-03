@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Company, users, Review , Homepage , TypeOfExperience
+from .models import Company, users, Review , Homepage , TypeOfExperience , ReviewReply
 
 admin.site.register(Company)
 class usersAdmin(admin.ModelAdmin):
@@ -31,3 +31,9 @@ admin.site.register(TypeOfExperience)
 class TypeOfExperienceAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
+
+admin.site.register(ReviewReply)
+class ReviewReplyAdmin(admin.ModelAdmin):
+    list_display = ('review', 'created_at')
+    search_fields = ('review__user__name',)
+    list_filter = ('created_at',)
