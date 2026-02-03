@@ -8,9 +8,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ir#y*bo81&wa6t6+29sulqri1hi13rs@$p!-=nu9)3y8$o#zrw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -93,8 +93,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # --- ملفات الميديا Media Files ---
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
