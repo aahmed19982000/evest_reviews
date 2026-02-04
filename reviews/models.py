@@ -96,30 +96,34 @@ class Review(models.Model):
     
 
     # --- أضف هذه الدالة لضغط الصور تلقائياً قبل الحفظ ---
-    def save(self, *args, **kwargs):
-        if self.media:
-            # فتح الصورة
-            img = Image.open(self.media)
-            
-            # التأكد من تحويل الصور (مثل PNG الشفاف) إلى صيغة RGB لتقليل الحجم
-            if img.mode in ("RGBA", "P"):
-                img = img.convert("RGB")
+def save(self, *args, **kwargs):
+        if self.media and hasattr(self.media, 'file'):
+            try:
+                img = Image.open(self.media)
+                
+                if img.mode in ("RGBA", "P"):
+                    img = img.convert("RGB")
 
-            # ضبط الأبعاد القصوى (مثلاً 1000 بكسل عرض) مع الحفاظ على التناسب
-            max_size = (1000, 1000)
-            img.thumbnail(max_size, Image.Resampling.LANCZOS)
+                max_size = (1000, 1000)
+                img.thumbnail(max_size, Image.Resampling.LANCZOS)
 
-            # حفظ الصورة في الذاكرة بضغط 70%
-            output = io.BytesIO()
-            img.save(output, format='JPEG', quality=70) 
-            output.seek(0)
+                output = io.BytesIO()
+                img.save(output, format='JPEG', quality=70)
+                output.seek(0)
 
-            # استبدال الملف المرفوع بالملف المضغوط
-            # نقوم بتغيير الامتداد إلى .jpg لضمان أقل حجم ممكن
-            new_name = f"{self.media.name.split('.')[0]}.jpg"
-            self.media = ContentFile(output.read(), name=new_name)
+                # 2. استخراج الاسم فقط بدون المسارات القديمة لتجنب التكرار
+                import os
+                original_name = os.path.basename(self.media.name)
+                new_name = f"{os.path.splitext(original_name)[0]}.jpg"
 
-        super().save(*args, **kwargs)  
+                # 3. حفظ الملف الجديد مع التأكد من عدم إضافة المسار يدوياً
+                self.media.save(new_name, ContentFile(output.read()), save=False)
+                
+            except Exception as e:
+                print(f"Error processing image: {e}")
+
+        super().save(*args, **kwargs)
+
 
 class ReviewReply(models.Model):
     review = models.ForeignKey(
