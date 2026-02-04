@@ -55,14 +55,65 @@
                             <p class="text-[#93a5c8] text-sm">بناءً على {{ total_count }} تقييم</p>
                         </div>
                         
-                        <div class="grid flex-1 min-w-[280px] grid-cols-[30px_1fr_45px] items-center gap-y-3">
-                            {% for stat in star_stats %}
-                            <span class="text-white text-sm">{{ stat.star }}</span>
-                            <div class="flex h-2 overflow-hidden rounded-full bg-[#344465]">
-                                <div class="bg-primary" style="width: {{ stat.percentage }}%;"></div>
+                        <div class="flex flex-1 flex-col md:flex-row items-center gap-8">
+    
+                            
+                            <div class="hidden md:block w-px h-16 bg-[#344465]"></div>
+                        
+                            <div class="flex-1 w-full">
+                                <p class="text-[#93a5c8] text-[10px] font-black tracking-widest uppercase mb-3 flex items-center gap-2">
+                                    <span class="size-2 bg-primary rounded-full animate-pulse"></span>
+                                    أحدث تجربة للمتداولين
+                                </p>
+                                
+                                {% if reviews %}
+                                    {% with last_review=reviews|first %}
+                                    <div class="bg-[#111621]/50 p-6 rounded-xl border border-[#344465]/50 flex gap-5 items-start relative overflow-hidden group">
+                                        
+                                        <div class="size-14 shrink-0 rounded-full bg-gradient-to-br from-primary/20 to-transparent flex items-center justify-center font-bold text-primary text-xl border border-primary/10">
+                                            {% if last_review.user %}{{ last_review.user.name|slice:":1" }}{% else %}ز{% endif %}
+                                        </div>
+                            
+                                        <div class="flex flex-col gap-3 flex-1">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex flex-col gap-0.5">
+                                                    <span class="text-white text-base font-bold">
+                                                        {% if last_review.user %}{{ last_review.user.name }}{% else %}{{ last_review.user_name }}{% endif %}
+                                                    </span>
+                                                    <div class="flex text-primary">
+                                                        {% for i in "12345"|make_list %}
+                                                            <span class="material-symbols-outlined text-[12px]" style="{% if forloop.counter > last_review.rating %}opacity: 0.2; font-variation-settings: 'FILL' 0{% else %}font-variation-settings: 'FILL' 1{% endif %}">star</span>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                            
+                                                {% if last_review.user %}
+                                                <a href="{% url 'user_profile' last_review.user.id %}" class="text-primary text-[11px] font-bold hover:underline flex items-center gap-1">
+                                                    عرض كل تقييمات الكاتب
+                                                    <span class="material-symbols-outlined text-sm">arrow_left</span>
+                                                </a>
+                                                {% endif %}
+                                            </div>
+                                            
+                                            <div class="relative">
+                                                <p class="text-white/80 text-base md:text-lg leading-relaxed italic font-medium line-clamp-3" id="latest-comment">
+                                                    "{{ last_review.comment }}"
+                                                </p>
+                                                
+                                                <div class="mt-2">
+                                                    <a href="{% if last_review.user %}{% url 'user_profile' last_review.user.id %}{% else %}#{% endif %}" 
+                                                       class="inline-block text-[#93a5c8] text-xs hover:text-white transition-colors border-b border-dashed border-[#93a5c8]/30 pb-0.5">
+                                                       إقرأ التجربة الكاملة وبقية تقييمات الكاتب...
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endwith %}
+                                {% else %}
+                                    <p class="text-[#93a5c8] text-xs italic">لا توجد تقييمات حديثة بعد.</p>
+                                {% endif %}
                             </div>
-                            <span class="text-[#93a5c8] text-xs text-left">{{ stat.percentage }}%</span>
-                            {% endfor %}
                         </div>
                     </div>
                 </div>
