@@ -1,0 +1,107 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html class="dark" dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>تسجيل الدخول - evest.reviews</title>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1754cf",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Noto Sans Arabic", "Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-4">
+    <div class="flex w-full max-w-6xl h-[700px] bg-[#1a2232] rounded-xl shadow-2xl overflow-hidden border border-[#243047]">
+        
+        <div class="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-16 bg-[#111722]">
+            <div class="flex items-center gap-3 text-white mb-10">
+                <div class="text-primary">
+                    <svg class="size-8" fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-white text-2xl font-bold leading-tight tracking-tight">evest.reviews</h2>
+            </div>
+
+            <div class="mb-8">
+                <h1 class="text-white text-3xl font-bold leading-tight mb-2">تسجيل الدخول إلى لوحة التحكم</h1>
+                <p class="text-[#93a5c8] text-sm">أدخل بيانات الاعتماد الخاصة بك للوصول إلى النظام</p>
+            </div>
+
+            <form class="space-y-4">
+                <div class="flex flex-col gap-2">
+                    <label class="text-white text-base font-medium">البريد الإلكتروني
+                        <div class="flex w-full items-stretch rounded-lg group mt-2">
+                            <div class="input-icon-container">
+                                <span class="material-symbols-outlined"></span>
+                            </div>
+                            <input class="custom-input rounded-r-none" placeholder="أدخل البريد الإلكتروني" type="email"/>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-white text-base font-medium">كلمة المرور
+                        <div class="flex w-full items-stretch rounded-lg group mt-2">
+                            <div class="input-icon-container">
+                                <span class="material-symbols-outlined"></span>
+                            </div>
+                            <input class="custom-input rounded-r-none" placeholder="أدخل كلمة المرور" type="password"/>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="flex items-center justify-between py-2">
+                    <label class="flex items-center gap-x-2 cursor-pointer">
+                        <input class="custom-checkbox" type="checkbox"/>
+                        <span class="text-white text-sm font-normal">تذكرني</span>
+                    </label>
+                    <a class="text-primary text-sm hover:underline" href="#">نسيت كلمة المرور؟</a>
+                </div>
+
+                <button class="login-button" type="submit">دخول</button>
+            </form>
+
+            <div class="mt-12 pt-6 border-t border-[#243047] flex items-center justify-center gap-2 text-[#93a5c8]">
+                <span class="material-symbols-outlined text-sm"></span>
+                <p class="text-xs">تطوير وبرمجة / احمد ابراهيم</p>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex lg:w-1/2 relative financial-pattern items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent"></div>
+            <div class="relative z-10 text-center p-12">
+                <div class="mb-8 inline-flex items-center justify-center p-4 bg-primary/10 rounded-full border border-primary/20">
+                    <span class="material-symbols-outlined text-6xl text-primary">analytics</span>
+                </div>
+                <h3 class="text-white text-2xl font-bold mb-4">تحليلات دقيقة، قرارات ذكية</h3>
+                <p class="text-[#93a5c8] max-w-sm mx-auto">مرحباً بك في نظام الإدارة الخاص بـ evest.reviews. قم بإدارة مراجعاتك وبياناتك المالية بكل سهولة وأمان.</p>
+            </div>
+            <div class="decoration-blob-1"></div>
+            <div class="decoration-blob-2"></div>
+        </div>
+    </div>
+</body>
+</html>

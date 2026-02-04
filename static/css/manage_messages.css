@@ -1,0 +1,207 @@
+/* manage_messages.css */
+
+/* إعدادات الخلفية العامة المتوافقة مع deep-black */
+body {
+    background-color: #0a0a0c; /* */
+}
+
+/* تنسيق الحاويات والبطاقات */
+.bg-dark-surface {
+    background-color: #121214; /* */
+}
+
+.border-dark-border {
+    border-color: #1f1f23; /* */
+}
+
+/* تحسين مظهر الجدول */
+table thead tr {
+    background-color: rgba(0, 0, 0, 0.2); /* */
+}
+
+table tbody tr {
+    transition: all 0.3s ease;
+}
+
+/* تأثير التمرير على الصفوف */
+table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02); /* */
+}
+
+/* تمييز الرسالة المختارة حالياً */
+.bg-primary\/5 {
+    background-color: rgba(59, 130, 246, 0.05); /* */
+}
+
+/* تنسيق أيقونات الـ Material */
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr; /* الأيقونات دائماً من اليسار لليمين */
+}
+
+/* تنسيق الشريط الجانبي الثابت عند التمرير */
+.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+}
+
+/* تحسين مظهر التمرير (Scrollbar) داخل نص الرسالة */
+.overflow-y-auto::-webkit-scrollbar {
+    width: 6px; /* */
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: #0a0a0c; /* */
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #1f1f23; /* */
+    border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #3b82f6; /* */
+}
+
+/* تأثيرات الأزرار */
+.bg-primary {
+    background-color: #3b82f6; /* */
+}
+
+.bg-primary:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2); /* */
+}
+
+/* تنسيق منطقة عرض الرسالة (Deep Black) */
+.bg-deep-black {
+    background-color: #0a0a0c; /* */
+}
+
+/* تحسين مظهر النصوص */
+.font-display {
+    font-family: 'Cairo', 'Tajawal', sans-serif; /* */
+}
+
+.tracking-tight {
+    letter-spacing: -0.025em;
+}
+
+.tracking-widest {
+    letter-spacing: 0.1em;
+}
+
+/* إضافات استجابة الشاشات */
+@media (max-width: 1024px) {
+    .sticky {
+        position: relative !important;
+        top: 0 !important;
+    }
+}
+
+/* manage_messages.css */
+
+/* تأمين الخطوط والتناسق */
+.font-display { font-family: 'Cairo', sans-serif !important; }
+
+/* إصلاح الأيقونات لتعمل بشكل صحيح في RTL */
+.material-icons {
+    display: inline-flex;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;
+}
+
+/* تنسيق الجداول لمنع التداخل */
+.table-fixed { table-layout: fixed; }
+
+/* تنسيق الصفوف عند الاختيار */
+.active-message {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    border-right: 4px solid #3b82f6; /* تمييز بصري من جهة اليمين */
+}
+
+/* تنسيق منطقة عرض الرسالة الجانبية */
+.message-detail-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* تحسين شكل التمرير داخل الرسالة */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { 
+    background: #1f1f23; 
+    border-radius: 10px; 
+}
+
+/* إصلاح المسافات في الأزرار */
+.action-btn {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* manage_messages.css */
+
+/* خلفية الصفحة العميقة */
+.bg-deep-black { background-color: #0a0a0c !important; }
+
+/* ألوان الأسطح والحدود المعتمدة في مشروعك */
+.bg-dark-surface { background-color: #121214 !important; }
+.border-dark-border { border-color: #1f1f23 !important; }
+
+/* تنسيق الجداول لتطابق صورة screen.jpg */
+.messages-table thead th {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #64748b; /* slate-500 */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 1.25rem 1.5rem;
+}
+
+.messages-table tbody tr {
+    border-bottom: 1px solid #1f1f23;
+    transition: background-color 0.2s;
+}
+
+.messages-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* حالة الرسالة المختارة */
+.selected-row {
+    background-color: rgba(59, 130, 246, 0.05) !important;
+}
+
+/* إصلاح تداخل الأيقونات */
+.material-icons, .material-symbols-outlined {
+    font-size: 22px;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* زر الحذف */
+.text-rose-500:hover { background-color: rgba(244, 63, 94, 0.1); }
+
+/* تنسيق الرد السريع والمدونة */
+.reply-area {
+    background-color: #0a0a0c;
+    border: 1px solid #1f1f23;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    color: #cbd5e1;
+}

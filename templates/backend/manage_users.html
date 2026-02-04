@@ -1,0 +1,103 @@
+{% extends 'baseـb.html' %}
+{% load static %}
+
+{% block title %}إدارة المستخدمين - إيفست ريفيوز{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/manage_users.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="management-container">
+    <div class="page-header">
+        <div class="header-info">
+            <h1 class="page-title">إدارة المستخدمين</h1>
+            <p class="page-subtitle">عرض وإدارة كافة أعضاء مجتمع إيفست للمراجعات المالية والوسطاء</p>
+        </div>
+        <button class="add-user-btn">
+            <span class="material-symbols-outlined">person_add</span>
+            <span>إضافة مستخدم يدوي</span>
+        </button>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon-wrapper bg-blue">
+                <span class="material-symbols-outlined">groups</span>
+            </div>
+            <div class="stat-details">
+                <p class="stat-label">إجمالي المستخدمين</p>
+                <p class="stat-value">{{ users_list.count }}</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon-wrapper bg-green">
+                <span class="material-symbols-outlined">verified</span>
+            </div>
+            <div class="stat-details">
+                <p class="stat-label">مراجِعون نشطون</p>
+                <p class="stat-value text-green">{% widthratio users_list.count 4 1 %}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container shadow-sm">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>المستخدم</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>رقم الجوال</th>
+                    <th>البلد</th>
+                    <th class="text-center">المراجعات</th>
+                    <th class="text-left">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user_obj in users_list %}
+                <tr class="table-row">
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar">
+                                {{ user_obj.name|slice:":1" }}
+                            </div>
+                            <span class="user-name-text">{{ user_obj.name }}</span>
+                        </div>
+                    </td>
+                    <td><span class="text-muted">{{ user_obj.email }}</span></td>
+                    <td><span class="text-muted" dir="ltr">{{ user_obj.mobile }}</span></td>
+                    <td>
+                        <span class="country-badge">
+                            {{ user_obj.country|default:"غير محدد" }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <div class="review-count-badge">
+                            <span class="count-num">{{ user_obj.reviews_count }}</span>
+                            <span class="material-symbols-outlined">forum</span>
+                        </div>
+                    </td>
+                    <td class="text-left">
+                        <div class="action-btns-group">
+                            <a href="{% url 'user_profile' user_obj.id %}" class="btn-action btn-view" title="عرض البروفايل">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </a>
+                            <button class="btn-action btn-edit" title="تعديل">
+                                <span class="material-symbols-outlined">edit</span>
+                            </button>
+                            <button class="btn-action btn-delete" title="حذف">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-row">لا يوجد مستخدمون مسجلون حالياً.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

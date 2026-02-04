@@ -1,0 +1,68 @@
+/* dashboard.css */
+body {
+    font-family: 'Noto Sans Arabic', sans-serif;
+    scrollbar-width: thin;
+    scrollbar-color: #243047 #111621;
+}
+
+/* Sidebar Links */
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.5rem;
+    color: #93a5c8;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.nav-link:hover {
+    background-color: #243047;
+    color: white;
+}
+
+.nav-link.active {
+    background-color: #1754cf;
+    color: white;
+}
+
+/* Cards & Containers */
+.stat-card {
+    background-color: #1a2233;
+    border: 1px solid #243047;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+}
+
+.table-container {
+    background-color: #1a2233;
+    border: 1px solid #243047;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+/* Icons */
+.icon-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background-color: #243047;
+    color: white;
+    transition: background 0.2s;
+}
+
+.icon-btn:hover {
+    background-color: #2d3b58;
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.active .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1;
+}

@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.sites',
     'reviews', 
+    'backend',
 ]
 SITE_ID = 1 
 
@@ -41,7 +42,6 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # تم تعديل المسار ليتناسب مع اختيارك الأخير الذي جعل القوالب تعمل
         'DIRS': [BASE_DIR / 'templates'], 
         'APP_DIRS': True,
         'OPTIONS': {

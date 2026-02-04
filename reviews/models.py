@@ -88,6 +88,7 @@ class Review(models.Model):
     is_problematic = models.BooleanField(default=False, verbose_name="بلاغ عن مشكلة") 
     created_at = models.DateTimeField(auto_now_add=True)
     media = models.FileField(upload_to='review_media/', blank=True, null=True, verbose_name="وسائط المراجعة")
+    is_approved = models.BooleanField(default=False, verbose_name="تمت الموافقة")
 
     def __str__(self):
         return f"{self.user.name} - {self.rating} Stars"
@@ -144,3 +145,14 @@ class Homepage(models.Model):
 
     def __str__(self):
         return "Homepage Meta Information"
+    
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100, verbose_name="الاسم")
+    email = models.EmailField(verbose_name="البريد الإلكتروني")
+    subject = models.CharField(max_length=200, verbose_name="الموضوع")
+    message = models.TextField(verbose_name="الرسالة")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"رسالة من {self.name} - {self.subject}"

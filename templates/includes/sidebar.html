@@ -1,0 +1,56 @@
+{% load static %}
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{% static 'css/Sidebar.css' %}">
+</head>
+
+<body>
+    <aside class="sidebar-container w-64 h-screen flex flex-col fixed right-0 top-0" dir="rtl">
+        <div class="px-6 py-8 flex items-center gap-3">
+             <div class="logo-box p-2 rounded-lg">
+                 <span class="material-symbols-outlined text-white">shield_person</span>
+             </div>
+             <h2 class="text-white font-bold">إيفست ريفيوز</h2>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+            <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>لوحة التحكم</span>
+            </a>
+            <a href="{% url 'manage_reviews' %}" class="nav-link {% if request.resolver_match.url_name == 'manage_reviews' %}active{% endif %}">
+                <span class="material-symbols-outlined">rate_review</span>
+                <span>إدارة المراجعات</span>
+            </a>
+            <a href="{% url 'manage_users' %}" class="nav-link {% if request.resolver_match.url_name == 'manage_users' %}active{% endif %}">
+                <span class="material-symbols-outlined">people</span>
+                <span>إدارة المستخدمين</span>
+            </a>
+            <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                <span class="material-symbols-outlined">home</span>
+                <span>إعدادات الصفحة الرئيسية</span>
+            </a>
+            <a href="{% url 'manage_messages' %}" class="nav-link {% if request.resolver_match.url_name == 'manage_messages' %}active{% endif %}">
+                <span class="material-symbols-outlined">message</span>
+                <span>إدارة الرسائل</span>
+            </a>
+        </nav>
+
+        <div class="user-profile-section">
+            <div class="profile-card">
+                <div class="relative">
+                    <img src="{% static 'images/avatar.png' %}" class="w-10 h-10 rounded-full border-2 border-gray-700">
+                    <div class="status-indicator"></div>
+                </div>
+                <div>
+                    <p class="text-white text-xs font-bold">أحمد محمد</p>
+                    <p class="text-gray-500 text-[10px]">مدير النظام</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+</body>

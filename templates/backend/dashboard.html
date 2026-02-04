@@ -1,0 +1,82 @@
+{% extends 'baseـb.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-bold">نظرة عامة على النشاط</h2>
+    <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">download</span> تصدير التقارير
+    </button>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="stat-card">
+        <div class="flex justify-between items-start mb-4">
+            <span class="text-[#93a5c8] text-sm">إجمالي المستخدمين</span>
+            <span class="material-symbols-outlined text-blue-500">groups</span>
+        </div>
+        <div class="text-3xl font-bold">{{ stats.total_users }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="flex justify-between items-start mb-4">
+            <span class="text-[#93a5c8] text-sm">مراجعات معلقة</span>
+            <span class="material-symbols-outlined text-yellow-500">pending_actions</span>
+        </div>
+        <div class="text-3xl font-bold text-yellow-500">{{ stats.pending_count }}</div>
+    </div>
+    </div>
+
+<div class="table-container">
+    <div class="p-6 border-b border-border-dark flex justify-between items-center">
+        <h3 class="font-bold">آخر المراجعات التي تنتظر الموافقة</h3>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-right">
+            <thead>
+                <tr class="bg-border-dark/20 text-[#93a5c8] text-xs">
+                    <th class="p-4">المستخدم</th>
+                    <th class="p-4">التقييم</th>
+                    <th class="p-4">التعليق</th>
+                    <th class="p-4">الإجراء</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-border-dark">
+                {% for review in pending_reviews %}
+                <tr class="hover:bg-white/5 transition-all">
+                    <td class="p-4 font-medium">{{ review.user.name }}</td>
+                    <td class="p-4 text-yellow-500">
+                        <div class="flex items-center gap-1">
+                            {{ review.rating }} <span class="material-symbols-outlined text-xs">star</span>
+                        </div>
+                    </td>
+                    <td class="p-4 text-sm text-[#93a5c8] truncate max-w-xs">{{ review.comment }}</td>
+                    <td class="p-4">
+                        <div class="flex items-center gap-2">
+                            <form method="POST" action="{% url 'dashboard' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="review_id" value="{{ review.id }}">
+                                <button type="submit" name="action" value="approve" class="text-green-500 hover:bg-green-500/10 p-2 rounded-lg" title="موافقة ونشر">
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                </button>
+                            </form>
+            
+                            <button type="button" class="text-[#93a5c8] hover:text-white p-2" 
+                                    onclick="showReviewDetails('{{ review.user.name|escapejs }}', '{{ review.comment|escapejs }}', '{{ review.rating }}')">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="p-10 text-center text-gray-500 italic">لا توجد مراجعات معلقة حالياً.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

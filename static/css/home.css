@@ -1,0 +1,113 @@
+/* home.css - تنسيقات لوحة قيادة إيفست */
+
+/* الحاوية الرئيسية */
+.dashboard-content {
+    font-family: 'Noto Sans Arabic', sans-serif;
+    min-height: 100vh;
+}
+
+/* تنسيق العناوين */
+.dashboard-content h1 {
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* بطاقة تعديل البيانات */
+.bg-card-dark {
+    background-color: #1b2231; /* لون البطاقات الداكن */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bg-card-dark:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* حدود العناصر */
+.border-border-dark {
+    border-color: #243047;
+}
+
+/* تنسيق الحقول (Inputs & Textarea) */
+.form-input {
+    background-color: #111621 !important; /* لون الخلفية داخل الحقل */
+    border: 1px solid #243047 !important;
+    color: #ffffff !important;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: #1754cf !important; /* اللون الأزرق عند التركيز */
+    box-shadow: 0 0 0 3px rgba(23, 84, 207, 0.15);
+    background-color: #161d2b !important;
+}
+
+.form-input::placeholder {
+    color: #4b5563;
+}
+
+/* تنسيق التسميات (Labels) */
+label {
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* تنسيق زر الحفظ */
+.bg-primary {
+    background-color: #1754cf;
+}
+
+.hover\:bg-primary\/90:hover {
+    background-color: #1449b5;
+    transform: translateY(-1px);
+}
+
+/* رسائل النجاح والتنبيه */
+.messages-container {
+    animation: slideInDown 0.5s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* أيقونات Material Symbols */
+.material-symbols-outlined {
+    vertical-align: middle;
+    line-height: 1;
+}
+
+/* تحسين شكل الـ Scrollbar داخل الـ Textarea */
+textarea.form-input::-webkit-scrollbar {
+    width: 6px;
+}
+
+textarea.form-input::-webkit-scrollbar-track {
+    background: #111621;
+}
+
+textarea.form-input::-webkit-scrollbar-thumb {
+    background: #243047;
+    border-radius: 10px;
+}
+
+textarea.form-input::-webkit-scrollbar-thumb:hover {
+    background: #1754cf;
+}
+
+/* تخصيص المسافات داخل الـ Form */
+form.p-8 {
+    padding: 2rem;
+}
+
+.space-y-6 > * + * {
+    margin-top: 1.5rem;
+}

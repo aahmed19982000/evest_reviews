@@ -1,0 +1,132 @@
+{% extends 'baseـb.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/manage_messages.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="p-6 lg:p-10 bg-deep-black min-h-screen">
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-extrabold text-white font-display">صندوق الوارد</h1>
+            <p class="text-sm text-slate-500 mt-2">إدارة جميع الرسائل والاستفسارات الواردة من العملاء</p>
+        </div>
+        <div class="flex gap-3">
+            <button class="bg-dark-surface border border-dark-border px-4 py-2 rounded-lg text-sm font-medium text-slate-300 flex items-center gap-2 hover:bg-slate-800 transition-all">
+                <span class="material-icons text-[18px]">filter_list</span>
+                <span>تصفية</span>
+            </button>
+            <a href="{% url 'manage_messages' %}" class="bg-primary text-white px-5 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-blue-600 transition-all shadow-lg shadow-primary/10">
+                <span class="material-icons text-[18px]">refresh</span>
+                <span>تحديث</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-dark-surface border border-dark-border rounded-xl overflow-hidden shadow-2xl mb-10">
+        <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse messages-table">
+                <thead>
+                    <tr class="border-b border-dark-border">
+                        <th class="px-6 py-5">اسم المرسل</th>
+                        <th class="px-6 py-5 text-center">الموضوع</th>
+                        <th class="px-6 py-5 text-center">الحالة</th>
+                        <th class="px-6 py-5 text-center">التاريخ</th>
+                        <th class="px-6 py-5 text-left">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-dark-border">
+                    {% for msg in messages_list %}
+                    <tr class="{% if selected_message.id == msg.id %}selected-row{% endif %}">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                                    {{ msg.name|slice:":1" }}
+                                </div>
+                                <div>
+                                    <div class="font-bold text-white text-sm">{{ msg.name }}</div>
+                                    <div class="text-[11px] text-slate-500">{{ msg.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="text-sm font-medium text-slate-200 truncate max-w-xs mx-auto">{{ msg.subject }}</div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary border border-primary/30 uppercase">جديد</span>
+                        </td>
+                        <td class="px-6 py-4 text-center text-xs text-slate-500">
+                            {{ msg.created_at|date:"Y-m-d" }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center justify-end gap-1">
+                                <a href="?view={{ msg.id }}" class="p-2 text-blue-400 hover:bg-blue-400/10 rounded-lg transition-all">
+                                    <span class="material-icons">visibility</span>
+                                </a>
+                                <form method="POST" class="inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="message_id" value="{{ msg.id }}">
+                                    <button type="submit" name="action" value="delete" class="p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all" onclick="return confirm('حذف الرسالة؟')">
+                                        <span class="material-icons">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
+        <div class="lg:col-span-2">
+            {% if selected_message %}
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-8 shadow-2xl">
+                <div class="flex items-start justify-between mb-8 pb-6 border-b border-dark-border/50">
+                    <div class="flex items-center gap-5">
+                        <div class="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-primary/20">
+                            {{ selected_message.name|slice:":1" }}
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">{{ selected_message.name }}</h3>
+                            <p class="text-sm text-slate-500 mt-1">{{ selected_message.email }} • {{ selected_message.created_at|date:"d M Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-10">
+                    <h4 class="text-xs font-bold text-primary mb-4 uppercase tracking-[0.2em]">الموضوع: {{ selected_message.subject }}</h4>
+                    <div class="text-slate-300 leading-relaxed text-base space-y-5 font-light">
+                        {{ selected_message.message|linebreaks }}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="h-full border-2 border-dashed border-dark-border rounded-xl flex items-center justify-center text-slate-600 italic p-10">
+                اختر رسالة من القائمة لعرض تفاصيلها هنا
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="lg:col-span-1">
+             <div class="bg-dark-surface border border-dark-border rounded-xl p-6 shadow-2xl sticky top-24">
+                <h4 class="text-sm font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary"></span> معلومات المرسل
+                </h4>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-500">
+                            <span class="material-icons text-xl">event</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-slate-600 uppercase font-bold">تاريخ الرسالة</p>
+                            <p class="text-sm font-medium text-slate-200">{{ selected_message.created_at|date:"d M Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

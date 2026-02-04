@@ -1,0 +1,43 @@
+/* contact.css */
+
+.contact-page-wrapper {
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* تنسيق الحقول عند التركيز */
+.form-input:focus {
+    background-color: #0a0c10 !important;
+    border-color: #1754cf !important;
+    box-shadow: 0 0 0 1px #1754cf;
+}
+
+/* تحسين شكل التنبيهات */
+.messages-container {
+    margin-bottom: 1.5rem;
+}
+
+/* استايل زر الإرسال */
+.bg-primary {
+    background-color: #1754cf;
+}
+
+.bg-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(23, 84, 207, 0.4);
+}
+
+/* استجابة الشاشات الصغيرة */
+@media (max-width: 768px) {
+    .contact-page-wrapper {
+        padding: 2rem 1rem;
+    }
+    
+    .text-4xl {
+        font-size: 2rem;
+    }
+}

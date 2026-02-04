@@ -1,0 +1,63 @@
+{% extends 'baseـb.html' %}
+{% load static %}
+
+{% block title %} تعديل إعدادات الصفحة - إيفست {% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-content p-8 max-w-4xl">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-black text-white tracking-tight">إعدادات الصفحة الرئيسية</h1>
+            <p class="text-[#93a5c8] mt-2">تحكم في كيفية ظهور موقعك على محركات البحث (SEO)</p>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-6 p-4 rounded-lg bg-green-500/10 border border-green-500/20 text-green-500 flex items-center gap-3">
+                <span class="material-symbols-outlined">check_circle</span>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="bg-card-dark border border-border-dark rounded-2xl overflow-hidden shadow-xl">
+        <div class="p-6 border-b border-border-dark bg-background-dark/30">
+            <h3 class="text-white font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">edit_note</span>
+                تعديل بيانات الميتا
+            </h3>
+        </div>
+
+        <form method="POST" class="p-8 space-y-6">
+            {% csrf_token %}
+            
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-300 flex items-center gap-2">
+                    عنوان الصفحة (Meta Title)
+                    <span class="text-xs font-normal text-gray-500">(يظهر في شريط المتصفح)</span>
+                </label>
+                {{ form.meta_title }}
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-gray-300 flex items-center gap-2">
+                    وصف الصفحة (Meta Description)
+                    <span class="text-xs font-normal text-gray-500">(يظهر في نتائج بحث جوجل)</span>
+                </label>
+                {{ form.meta_description }}
+            </div>
+
+            <div class="pt-4 flex justify-end">
+                <button type="submit" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined">save</span>
+                    حفظ التغييرات
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

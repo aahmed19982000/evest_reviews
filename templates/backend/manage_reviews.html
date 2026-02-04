@@ -1,0 +1,186 @@
+{% extends 'baseـb.html' %}
+{% load static %}
+
+{% block title %}إدارة المراجعات - إيفست ريفيوز{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/manage_reviews.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="reviews-management-container">
+    <div class="page-header">
+        <div class="header-info">
+            <h1 class="page-title">إدارة المراجعات</h1>
+            <p class="page-subtitle">عرض وإدارة كافة مراجعات المستخدمين وتحديث حالاتها بشكل فوري</p>
+        </div>
+        <button class="export-btn">
+            <span>تصدير التقارير (CSV)</span>
+        </button>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-header">
+                <span class="material-symbols-outlined text-blue-500">reviews</span>
+                <span class="stat-label">إجمالي المراجعات</span>
+            </div>
+            <div class="stat-value text-white">{{ stats.total_reviews }}</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-header">
+                <span class="material-symbols-outlined text-emerald-500">verified</span>
+                <span class="stat-label">المراجعات المنشورة</span>
+            </div>
+            <div class="stat-value text-emerald-500">{{ stats.approved_count }}</div>
+        </div>        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>المستخدم</th>
+                    <th>الشركة</th>
+                    <th class="text-center">التقييم</th>
+                    <th>نوع التجربة</th>
+                    <th>الحالة</th>
+                    <th class="text-left">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in reviews %}
+                <tr class="table-row">
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">{{ review.user.name|slice:":2" }}</div>
+                            <span class="user-name">{{ review.user.name }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="company-badge">{{ review.company.name|default:"عام" }}</span>
+                    </td>
+                    <td class="text-center">
+                        <div class="rating-stars">
+                            <span class="rating-num">{{ review.rating }}</span>
+                            <span class="material-symbols-outlined star-icon">star</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="experience-badge">{{ review.experience_type_dynamic|default:"تجربة عامة" }}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if review.is_approved %}
+                            <div class="flex items-center gap-2">
+                                <span class="size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                                <span class="text-xs font-bold text-emerald-500">منشور</span>
+                            </div>
+                        {% else %}
+                            <div class="flex items-center gap-2">
+                                <span class="size-2 rounded-full bg-slate-500"></span>
+                                <span class="text-xs font-bold text-slate-400">مخفي</span>
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td class="text-left">
+                        <div class="action-buttons flex items-center gap-2">
+                            <button type="button" class="btn-icon btn-view" 
+                                    onclick="showReviewDetails('{{ review.user.name|escapejs }}', '{{ review.comment|escapejs }}', '{{ review.rating }}')">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </button>
+                        
+                            <form method="POST" class="action-form inline flex gap-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="review_id" value="{{ review.id }}">
+                                
+                                {% if review.is_approved %}
+                                    <button type="submit" name="action" value="hide" class="btn-icon btn-hide" title="إخفاء">
+                                        <span class="material-symbols-outlined">visibility_off</span>
+                                    </button>
+                                {% else %}
+                                    <button type="submit" name="action" value="approve" class="btn-icon btn-approve" title="نشر">
+                                        <span class="material-symbols-outlined">check_circle</span>
+                                    </button>
+                                {% endif %}
+                        
+                                <button type="submit" name="action" value="delete" 
+                                        class="btn-icon btn-delete" title="حذف نهائي"
+                                        onclick="return confirm('هل أنت متأكد من حذف هذه المراجعة نهائياً؟')">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-state">لا توجد مراجعات حالياً.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="commentModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#1b2231] border border-[#243047] w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden transform transition-all">
+        <div class="p-6 border-b border-[#243047] flex justify-between items-center">
+            <h3 class="text-xl font-bold text-white">تفاصيل المراجعة</h3>
+            <button onclick="closeModal()" class="text-[#93a5c8] hover:text-white transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="flex items-center gap-4 mb-6">
+                <div id="modalAvatar" class="size-12 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-lg"></div>
+                <div>
+                    <h4 id="modalName" class="text-white font-bold text-lg"></h4>
+                    <div id="modalStars" class="flex text-yellow-500 gap-0.5 mt-1"></div>
+                </div>
+            </div>
+            <div class="bg-[#111621] border border-[#243047] rounded-xl p-5">
+                <p id="modalComment" class="text-[#93a5c8] leading-relaxed italic"></p>
+            </div>
+        </div>
+        <div class="p-6 bg-[#243047]/20 flex justify-end">
+            <button onclick="closeModal()" class="px-6 py-2 bg-[#243047] hover:bg-[#2d3a54] text-white rounded-lg font-medium transition-all">إغلاق</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showReviewDetails(name, comment, rating) {
+        // تعبئة البيانات في المودال
+        document.getElementById('modalName').innerText = name;
+        document.getElementById('modalComment').innerText = comment || "لا يوجد نص للتعليق";
+        document.getElementById('modalAvatar').innerText = name.substring(0, 2);
+        
+        // رسم النجوم
+        const starsContainer = document.getElementById('modalStars');
+        starsContainer.innerHTML = '';
+        for (let i = 0; i < parseInt(rating); i++) {
+            starsContainer.innerHTML += '<span class="material-symbols-outlined text-sm" style="font-variation-settings: \'FILL\' 1">star</span>';
+        }
+
+        // إظهار المودال
+        const modal = document.getElementById('commentModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('commentModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    // إغلاق عند الضغط خارج النافذة
+    window.onclick = function(event) {
+        const modal = document.getElementById('commentModal');
+        if (event.target == modal) closeModal();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+# ملفات البيئة الافتراضية
+venv/
+env/
+.env
+__pycache__/
+*.py[cod]
+*$py.class
+
+# قاعدة البيانات (تجاهل SQLite المحلية)
+*.sqlite3
+db.sqlite3
+
+# ملفات الميديا والملفات الساكنة المجمعة
+media/
+staticfiles/
+static_root/
+review_media/
+
+# ملفات النظام وبيئة العمل
+.vscode/
+.idea/
+.DS_Store
+*.log
+Thumbs.db
+
+# ملفات الإعدادات الحساسة (إذا كنت تستخدم ملف منفصل)
+local_settings.py

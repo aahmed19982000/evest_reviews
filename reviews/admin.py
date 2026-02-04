@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Company, users, Review , Homepage , TypeOfExperience , ReviewReply
+from .models import Company, users, Review , Homepage , TypeOfExperience , ReviewReply , ContactMessage
 
 admin.site.register(Company)
 class usersAdmin(admin.ModelAdmin):
@@ -36,4 +36,10 @@ admin.site.register(ReviewReply)
 class ReviewReplyAdmin(admin.ModelAdmin):
     list_display = ('review', 'created_at')
     search_fields = ('review__user__name',)
+    list_filter = ('created_at',)
+
+admin.site.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'created_at')
+    search_fields = ('name', 'email')
     list_filter = ('created_at',)

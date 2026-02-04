@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}اتصل بنا - إيفست ريفيوز{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="contact-page-wrapper py-10 px-4 max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+        <h1 class="text-white text-4xl font-black mb-4">اتصل بنا</h1>
+        <p class="text-[#93a5c8] text-lg max-w-2xl mx-auto">
+            نحن هنا للإجابة على استفساراتكم ومساعدتكم. فريقنا متاح لتقديم الدعم الفني والمعلومات المتعلقة بالمراجعات.
+        </p>
+    </div>
+
+    <div class="bg-[#1b2333] rounded-2xl border border-[#243047] shadow-2xl overflow-hidden">
+        <div class="p-6 border-b border-[#243047] bg-[#111621]/50">
+            <h2 class="text-white text-xl font-bold flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary">mail</span>
+                أرسل لنا رسالة
+            </h2>
+        </div>
+
+        <form method="POST" action="{% url 'contact' %}" class="p-8 space-y-6">
+            {% csrf_token %}
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="p-4 rounded-xl {% if message.tags == 'success' %}bg-green-500/10 text-green-500{% else %}bg-red-500/10 text-red-500{% endif %} flex items-center gap-2">
+                        <span class="material-symbols-outlined">{% if message.tags == 'success' %}check_circle{% else %}error{% endif %}</span>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-2">
+                    <label class="text-gray-300 text-sm font-medium pr-1">الاسم الكامل</label>
+                    <input type="text" name="name" required placeholder="أدخل اسمك بالكامل"
+                           class="form-input w-full rounded-xl bg-[#0a0c10]/50 text-white border border-[#243047] h-14 focus:border-primary focus:ring-1 focus:ring-primary p-4 outline-none transition-all">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-gray-300 text-sm font-medium pr-1">البريد الإلكتروني</label>
+                    <input type="email" name="email" required placeholder="example@domain.com"
+                           class="form-input w-full rounded-xl bg-[#0a0c10]/50 text-white border border-[#243047] h-14 focus:border-primary focus:ring-1 focus:ring-primary p-4 outline-none transition-all">
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label class="text-gray-300 text-sm font-medium pr-1">موضوع الرسالة</label>
+                <input type="text" name="subject" required placeholder="ما هو موضوع استفسارك؟"
+                       class="form-input w-full rounded-xl bg-[#0a0c10]/50 text-white border border-[#243047] h-14 focus:border-primary focus:ring-1 focus:ring-primary p-4 outline-none transition-all">
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label class="text-gray-300 text-sm font-medium pr-1">نص الرسالة</label>
+                <textarea name="message" required rows="5" placeholder="اكتب رسالتك هنا بالتفصيل..."
+                          class="form-input w-full rounded-xl bg-[#0a0c10]/50 text-white border border-[#243047] min-h-[180px] focus:border-primary focus:ring-1 focus:ring-primary p-4 outline-none transition-all resize-none"></textarea>
+            </div>
+
+            <button type="submit" class="w-full flex items-center justify-center gap-2 rounded-xl h-14 bg-primary text-white text-lg font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 mt-4">
+                <span>إرسال الرسالة</span>
+                <span class="material-symbols-outlined">send</span>
+            </button>
+        </form>
+    </div>
+
+    <div class="mt-8 bg-amber-900/10 p-6 rounded-xl border border-amber-900/30 flex gap-4">
+        <span class="material-symbols-outlined text-amber-500">info</span>
+        <div>
+            <h4 class="text-amber-500 font-bold mb-1 text-sm">ملاحظة هامة</h4>
+            <p class="text-amber-200/70 text-sm leading-relaxed">
+                نحن موقع مراجعات مستقل تماماً. إذا كنت تواجه مشكلة تقنية في حسابك لدى منصة تداول أو تريد سحب أموالك، يرجى التواصل مع الدعم الفني الخاص بالمنصة مباشرة عبر موقعهم الرسمي.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

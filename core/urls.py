@@ -25,7 +25,8 @@ def robots_txt(request):
 # 3. قائمة روابط واحدة لكل شيء
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('reviews.urls')), # هذا هو السطر الذي يعيد تشغيل موقعك
+    path('', include('reviews.urls')), 
+    path('backend/', include('backend.urls')),
     
     # روابط الخرائط
     path('sitemap.xml', sitemap_views.index, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.index'),
