@@ -170,114 +170,112 @@
                     </div>
                 </div>
 
-                <div class="flex flex-col gap-4">
-                    <h2 class="text-xl font-bold text-white mb-2">آخر التقييمات (تجارب المتداولين)</h2>
+                <div class="flex flex-col gap-6">
+                    <h2 class="text-xl font-bold text-white mb-2 px-1 md:px-0">آخر التقييمات (تجارب المتداولين)</h2>
+                    
                     {% for review in reviews %}
-                    <div class="bg-[#1a2232] border border-[#344465] rounded-xl p-6 flex flex-col gap-4 {% if review.is_problematic %}border-r-4 border-r-danger{% endif %} relative overflow-hidden">
+                    <div class="bg-[#1a2232] border border-[#344465] rounded-2xl p-4 md:p-6 flex flex-col gap-4 {% if review.is_problematic %}border-r-4 border-r-danger{% endif %} relative overflow-hidden transition-all hover:border-[#4a5d85]">
                         
-                        <div class="flex justify-between items-start">
-                            <div class="flex gap-4 items-center">
-                                <a href="{% if review.user %}{% url 'user_profile' review.user.id %}{% else %}#{% endif %}" class="block group">
-                                    <div class="size-12 rounded-full bg-[#243047] flex items-center justify-center font-bold group-hover:bg-primary group-hover:text-white transition-all shadow-sm
-                                        {% if review.rating <= 2 %} text-danger 
-                                        {% elif review.rating < 4 %} text-[#f59e0b] 
-                                        {% else %} text-success {% endif %}">
+                        <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
+                            <div class="flex gap-3 md:gap-4 items-center">
+                                <a href="{% if review.user %}{% url 'user_profile' review.user.id %}{% else %}#{% endif %}" class="block shrink-0">
+                                    <div class="size-11 md:size-12 rounded-full bg-[#243047] flex items-center justify-center font-black shadow-lg
+                                        {% if review.rating <= 2 %} text-danger {% elif review.rating < 4 %} text-[#f59e0b] {% else %} text-success {% endif %}">
                                         {% if review.user %} {{ review.user.name|slice:":1" }} {% else %} ز {% endif %}
                                     </div>
                                 </a>
                     
-                                <div class="flex flex-col">
-                                    <div class="flex items-center gap-2">
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex flex-wrap items-center gap-2">
                                         <a href="{% if review.user %}{% url 'user_profile' review.user.id %}{% else %}#{% endif %}" class="group">
-                                            <h3 class="font-bold text-white group-hover:text-primary transition-colors flex items-center gap-1">
+                                            <h3 class="font-bold text-white text-sm md:text-base group-hover:text-primary transition-colors">
                                                 {% if review.user %}{{ review.user.name }}{% else %}{{ review.user_name|default:"مستخدم مجهول" }}{% endif %}
                                             </h3>
                                         </a>
                                         {% if review.country %}
-                                        <span class="flex items-center gap-0.5 text-[9px] text-slate-500 bg-white/5 px-1.5 py-0.5 rounded">
+                                        <span class="inline-flex items-center gap-0.5 text-[9px] text-slate-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">
                                             <span class="material-symbols-outlined text-[10px]">location_on</span>
                                             {{ review.country }}
                                         </span>
                                         {% endif %}
                                     </div>
                     
-                                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-                                        <div class="flex 
-                                            {% if review.rating <= 2 %} text-danger 
-                                            {% elif review.rating < 4 %} text-[#f59e0b] 
-                                            {% else %} text-success {% endif %}">
+                                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                                        <div class="flex {% if review.rating <= 2 %} text-danger {% elif review.rating < 4 %} text-[#f59e0b] {% else %} text-success {% endif %}">
                                             {% for i in "12345"|make_list %}
-                                            <span class="material-symbols-outlined text-xs" 
-                                                  style="{% if forloop.counter > review.rating %}opacity: 0.3; font-variation-settings: 'FILL' 0{% endif %}">
+                                            <span class="material-symbols-outlined text-[14px] md:text-xs" 
+                                                  style="{% if forloop.counter > review.rating %}opacity: 0.2; font-variation-settings: 'FILL' 0{% else %}font-variation-settings: 'FILL' 1{% endif %}">
                                                 star
                                             </span>
                                             {% endfor %}
                                         </div>
-                                        <span class="text-[10px] text-[#93a5c8]">{{ review.created_at|timesince }}</span>
-                                        {% if review.experience_type_dynamic %}
-                                        <span class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[#93a5c8] text-[9px]">
-                                            <span class="material-symbols-outlined text-[10px] text-primary">info</span>
-                                            {{ review.experience_type_dynamic.name }}
-                                        </span>
-                                        {% endif %}
-                                        {% if review.media %}
-                                        <span class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[9px] animate-pulse">
-                                            <span class="material-symbols-outlined text-[10px]">image</span>
-                                            يحتوي على إثبات
-                                        </span>
-                                        {% endif %}
+                                        <span class="text-[10px] text-[#93a5c8] font-medium">{{ review.created_at|timesince }}</span>
                                     </div>
                                 </div>
                             </div>
-                            <span class="{% if review.is_problematic %}bg-danger/20 text-danger border-danger/30{% else %}bg-success/20 text-success border-success/30{% endif %} text-[10px] font-bold px-2 py-1 rounded border uppercase tracking-wider">
+                
+                            <span class="self-start sm:self-center {% if review.is_problematic %}bg-danger/10 text-danger border-danger/20{% else %}bg-success/10 text-success border-success/20{% endif %} text-[9px] md:text-[10px] font-black px-2.5 py-1 rounded-lg border uppercase tracking-tighter">
                                 {% if review.is_problematic %}بلاغ مشكلة{% else %}تجربة موثقة{% endif %}
                             </span>
                         </div>
                 
-                        <p class="text-[#93a5c8] text-sm leading-relaxed italic">
-                            "{{ review.comment }}"
-                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            {% if review.experience_type_dynamic %}
+                            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#111621] border border-[#243047] text-[#93a5c8] text-[10px]">
+                                <span class="material-symbols-outlined text-[12px] text-primary">info</span>
+                                {{ review.experience_type_dynamic.name }}
+                            </span>
+                            {% endif %}
+                            
+                            {% if review.media %}
+                            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold">
+                                <span class="material-symbols-outlined text-[12px]">verified</span>
+                                بإثبات مصور
+                            </span>
+                            {% endif %}
+                        </div>
+                
+                        <div class="relative px-1">
+                            <p class="text-white/90 text-sm md:text-base leading-relaxed italic font-medium">
+                                "{{ review.comment }}"
+                            </p>
+                        </div>
                 
                         {% if review.media %}
-<div class="mt-2 flex items-center">
-    <a href="{{ review.media.url }}" target="_blank" 
-       class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all duration-300 group">
-        
-        <span class="material-symbols-outlined text-[18px] group-hover:scale-110 transition-transform">
-            image_search
-        </span>
-        
-        <span class="text-[11px] font-bold">تم إرفاق إثبات مصور (اضغط للعرض)</span>
-        
-        <span class="material-symbols-outlined text-[14px] opacity-50">
-            open_in_new
-        </span>
-    </a>
-</div>
-{% endif %}
+                        <div class="mt-1">
+                            <a href="{{ review.media.url }}" target="_blank" 
+                               class="flex items-center justify-center sm:inline-flex gap-2 w-full sm:w-auto px-4 py-2.5 rounded-xl bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all group">
+                                <span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform">image_search</span>
+                                <span class="text-xs font-bold">عرض الإثبات المصور المرفق</span>
+                                <span class="material-symbols-outlined text-sm opacity-50">open_in_new</span>
+                            </a>
+                        </div>
+                        {% endif %}
                 
-                        <div class="flex flex-col gap-3 mt-2 border-r-2 border-[#243047] pr-4 mr-2">
+                        {% if review.replies.all %}
+                        <div class="flex flex-col gap-3 mt-2 border-r-2 border-[#344465] pr-4 mr-1">
                             {% for reply in review.replies.all %}
-                            <div class="bg-[#111621]/40 p-3 rounded-lg border border-[#243047]/50 relative group/reply">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <div class="size-5 rounded-full bg-primary/20 flex items-center justify-center text-[10px] text-primary font-bold">
-                                        {{ reply.user.name|slice:":1" }}
+                            <div class="bg-[#111621]/60 p-3 rounded-xl border border-[#344465]/30 relative">
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div class="size-6 rounded-full bg-primary/20 flex items-center justify-center text-[10px] text-primary font-bold border border-primary/10">
+                                        {{ reply.user.name|slice:":1"|default:"م" }}
                                     </div>
-                                    <span class="text-white text-[11px] font-bold">{{ reply.user.name }}</span>
+                                    <span class="text-white text-[11px] font-bold">{% if reply.user %}{{ reply.user.name }}{% else %}إدارة الموقع{% endif %}</span>
                                     <span class="text-[9px] text-slate-500">• {{ reply.created_at|timesince }}</span>
                                 </div>
-                                <p class="text-[#93a5c8] text-xs leading-relaxed">
+                                <p class="text-[#93a5c8] text-xs leading-relaxed pr-1">
                                     {{ reply.reply_text }}
                                 </p>
                             </div>
                             {% endfor %}
                         </div>
+                        {% endif %}
                 
-                        <div class="mt-2 flex justify-start">
-                            <button onclick="openReplyModal('{{ review.id }}', '{{ review.user.name }}')" 
-                                    class="flex items-center gap-1.5 text-[11px] text-[#93a5c8] hover:text-primary transition-all">
-                                <span class="material-symbols-outlined text-sm">comment</span>
-                                إضافة رد على هذه التجربة
+                        <div class="mt-2 pt-2 border-t border-[#344465]/30">
+                            <button onclick="openReplyModal('{{ review.id }}', '{{ review.user.name|default:'المتداول' }}')" 
+                                    class="flex items-center gap-2 text-[11px] font-bold text-[#93a5c8] hover:text-primary transition-all bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg w-full sm:w-auto justify-center">
+                                <span class="material-symbols-outlined text-base">add_comment</span>
+                                رد على هذه التجربة
                             </button>
                         </div>
                 
