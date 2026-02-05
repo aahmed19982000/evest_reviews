@@ -8,7 +8,7 @@ from reviews.forms import HomepageForm , ContactMessageForm
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from .models import StaffUser
 
-
+@staff_member_required(login_url='login')
 def dashboard(request):
     # 1. معالجة طلب الموافقة إذا تم إرسال POST
     if request.method == "POST":
