@@ -84,20 +84,26 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+import requests
+
 def get_user_country(ip_address):
     # إذا كان الجهاز محلي، لن نجد دولة
     if ip_address == '127.0.0.1':
         return "جهاز محلي (Localhost)"
     
     try:
-        # استخدام خدمة ip-api المجانية
-        response = requests.get(f'http://ip-api.com/json/{ip_address}')
+        # إضافة ?lang=ar لطلب البيانات باللغة العربية
+        response = requests.get(f'http://ip-api.com/json/{ip_address}?lang=ar')
         data = response.json()
+        
         if data['status'] == 'success':
             return data['country'] 
-    except:
-        pass
-    return " السعودية"
+            
+    except Exception as e:
+        print(f"Error fetching country: {e}")
+        
+    # قيمة افتراضية في حال فشل الطلب
+    return "الامارات"
 
 
 def submit_review(request, slug):

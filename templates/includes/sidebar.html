@@ -38,18 +38,32 @@
                 <span class="material-symbols-outlined">message</span>
                 <span>إدارة الرسائل</span>
             </a>
+            <a href="{% url 'manage_staff' %}" class="nav-link {% if request.resolver_match.url_name == 'manage_staff' %}active{% endif %}">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+                <span>إدارة فريق العمل</span>
+            </a>
         </nav>
 
-        <div class="user-profile-section">
-            <div class="profile-card">
-                <div class="relative">
-                    <img src="{% static 'images/avatar.png' %}" class="w-10 h-10 rounded-full border-2 border-gray-700">
-                    <div class="status-indicator"></div>
+        <div class="user-profile-section p-4 border-t border-gray-800">
+            <div class="flex items-center justify-between bg-[#1a2232] p-3 rounded-xl border border-[#243047]">
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" class="w-10 h-10 rounded-full border-2 border-primary">
+                        {% else %}
+                            <img src="{% static 'images/avatar.png' %}" class="w-10 h-10 rounded-full border-2 border-gray-700">
+                        {% endif %}
+                        <div class="status-indicator bg-green-500 w-3 h-3 rounded-full border-2 border-[#1a2232] absolute bottom-0 right-0"></div>
+                    </div>
+                    <div>
+                        <p class="text-white text-xs font-bold">{{ user.username }}</p>
+                        <p class="text-gray-500 text-[10px]">{{ user.get_role_display }}</p>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-white text-xs font-bold">أحمد محمد</p>
-                    <p class="text-gray-500 text-[10px]">مدير النظام</p>
-                </div>
+                
+                <a href="{% url 'logout' %}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center" title="تسجيل الخروج">
+                    <span class="material-symbols-outlined text-xl">logout</span>
+                </a>
             </div>
         </div>
     </aside>

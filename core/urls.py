@@ -24,8 +24,11 @@ def robots_txt(request):
 
 # 3. قائمة روابط واحدة لكل شيء
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin-panel/', admin.site.urls), # لوحة تحكم Django الأساسية (Jazzmin)
+    
     path('', include('reviews.urls')), 
+    
+    # هذا الرابط يشير إلى تطبيقك المخصص (Custom Backend) الذي برمجت فيه الـ Dashboard
     path('backend/', include('backend.urls')),
     
     # روابط الخرائط
@@ -35,7 +38,6 @@ urlpatterns = [
     # رابط robots.txt
     path("robots.txt", robots_txt), 
 ]
-
 # إضافة روابط الملفات الثابتة
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

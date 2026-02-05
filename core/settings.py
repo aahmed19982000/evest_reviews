@@ -97,8 +97,17 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # --- ملفات الميديا Media Files ---
 
+AUTH_USER_MODEL = 'backend.StaffUser' 
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = ['https://evestreviews.pythonanywhere.com']
+
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://evestreviews.pythonanywhere.com',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+]

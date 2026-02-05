@@ -1,0 +1,82 @@
+{% extends 'baseـb.html' %}
+{% load static %}
+
+{% block content %}
+<div style="background-color: #0f172a; min-height: 100vh; padding: 20px; color: white; direction: rtl;">
+    
+    <div style="max-width: 1000px; margin: 0 auto; background-color: #1e293b; border-radius: 12px; padding: 30px; border: 1px solid #334155; margin-bottom: 30px;">
+        <h2 style="margin-bottom: 25px; font-size: 1.5rem; color: #f8fafc;">
+            {% if instance %} تعديل بيانات: {{ instance.username }} {% else %} إضافة عضو جديد لفريق العمل {% endif %}
+        </h2>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div>
+                    <label style="color: #94a3b8; font-size: 0.85rem;">اسم الموظف</label>
+                    <input type="text" name="username" value="{{ instance.username|default:'' }}" required style="width: 100%; background: #0f172a; border: 1px solid #334155; padding: 10px; color: white; border-radius: 6px;">
+                </div>
+                <div>
+                    <label style="color: #94a3b8; font-size: 0.85rem;">البريد الإلكتروني</label>
+                    <input type="email" name="email" value="{{ instance.email|default:'' }}" required style="width: 100%; background: #0f172a; border: 1px solid #334155; padding: 10px; color: white; border-radius: 6px;">
+                </div>
+                <div>
+                    <label style="color: #94a3b8; font-size: 0.85rem;">الدور</label>
+                    <select name="role" style="width: 100%; background: #0f172a; border: 1px solid #334155; padding: 10px; color: white; border-radius: 6px;">
+                        <option value="admin" {% if instance.role == 'admin' %}selected{% endif %}>مدير نظام</option>
+                        <option value="editor" {% if instance.role == 'editor' %}selected{% endif %}>محرر</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: #94a3b8; font-size: 0.85rem;">كلمة المرور</label>
+                    <input type="password" name="password" {% if not instance %}required{% endif %} placeholder="••••" style="width: 100%; background: #0f172a; border: 1px solid #334155; padding: 10px; color: white; border-radius: 6px;">
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                {% if instance %}
+                    <button type="submit" name="action" value="delete" onclick="return confirm('هل أنت متأكد من الحذف؟')" style="background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">حذف الحساب</button>
+                    <a href="{% url 'manage_staff' %}" style="background: #475569; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;">إلغاء</a>
+                {% endif %}
+                <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 10px 30px; border-radius: 6px; cursor: pointer;">
+                    {% if instance %} حفظ التعديلات {% else %} إضافة الموظف {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div style="max-width: 1000px; margin: 0 auto; background-color: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: right;">
+            <thead style="background-color: #334155; color: #94a3b8;">
+                <tr>
+                    <th style="padding: 15px;">الموظف</th>
+                    <th style="padding: 15px;">الدور</th>
+                    <th style="padding: 15px;">الحالة</th>
+                    <th style="padding: 15px;">إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for staff in staff_list %}
+                <tr style="border-bottom: 1px solid #334155;">
+                    <td style="padding: 15px;">
+                        <div style="font-weight: bold;">{{ staff.username }}</div>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">{{ staff.email }}</div>
+                    </td>
+                    <td style="padding: 15px;">{{ staff.get_role_display|default:staff.role }}</td>
+                    <td style="padding: 15px;">
+                        {% if staff.is_active %}
+                        <span style="color: #10b981; font-size: 0.8rem;">● نشط</span>
+                        {% else %}
+                        <span style="color: #ef4444; font-size: 0.8rem;">● معطل</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 15px;">
+                        <a href="{% url 'edit_staff' staff.id %}" style="color: #3b82f6; text-decoration: none; font-size: 0.9rem;">تعديل</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

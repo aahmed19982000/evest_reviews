@@ -50,38 +50,48 @@
                 <p class="text-[#93a5c8] text-sm">أدخل بيانات الاعتماد الخاصة بك للوصول إلى النظام</p>
             </div>
 
-            <form class="space-y-4">
+            <form class="space-y-4" method="POST" action="{% url 'login' %}">
+                {% csrf_token %} {% if messages %}
+                <div class="mb-4">
+                    {% for message in messages %}
+                    <div class="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            
                 <div class="flex flex-col gap-2">
-                    <label class="text-white text-base font-medium">البريد الإلكتروني
+                    <label class="text-white text-base font-medium">اسم المستخدم
                         <div class="flex w-full items-stretch rounded-lg group mt-2">
                             <div class="input-icon-container">
-                                <span class="material-symbols-outlined"></span>
+                                <span class="material-symbols-outlined text-[#93a5c8]"></span>
                             </div>
-                            <input class="custom-input rounded-r-none" placeholder="أدخل البريد الإلكتروني" type="email"/>
+                            <input name="username" class="custom-input rounded-r-none" placeholder="أدخل اسم المستخدم" type="text" required/>
                         </div>
                     </label>
                 </div>
-
+            
                 <div class="flex flex-col gap-2">
                     <label class="text-white text-base font-medium">كلمة المرور
                         <div class="flex w-full items-stretch rounded-lg group mt-2">
                             <div class="input-icon-container">
-                                <span class="material-symbols-outlined"></span>
+                                <span class="material-symbols-outlined text-[#93a5c8]"></span>
                             </div>
-                            <input class="custom-input rounded-r-none" placeholder="أدخل كلمة المرور" type="password"/>
+                            <input name="password" class="custom-input rounded-r-none" placeholder="أدخل كلمة المرور" type="password" required/>
                         </div>
                     </label>
                 </div>
-
+            
                 <div class="flex items-center justify-between py-2">
                     <label class="flex items-center gap-x-2 cursor-pointer">
-                        <input class="custom-checkbox" type="checkbox"/>
+                        <input name="remember_me" class="custom-checkbox" type="checkbox"/>
                         <span class="text-white text-sm font-normal">تذكرني</span>
                     </label>
                     <a class="text-primary text-sm hover:underline" href="#">نسيت كلمة المرور؟</a>
                 </div>
-
-                <button class="login-button" type="submit">دخول</button>
+            
+                <button class="login-button w-full" type="submit">دخول</button>
             </form>
 
             <div class="mt-12 pt-6 border-t border-[#243047] flex items-center justify-center gap-2 text-[#93a5c8]">

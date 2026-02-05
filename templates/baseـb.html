@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
     
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
     
@@ -18,11 +17,43 @@
         body { font-family: 'Noto Sans Arabic', sans-serif; background-color: #111621; }
         .main-content { margin-right: 16rem; transition: all 0.3s; }
         @media (max-width: 1024px) { .main-content { margin-right: 0; } }
+
+        /* Toast Animation Custom Styles */
+        .toast-entrance { transform: translateX(-150%); }
+        .toast-exit { transform: translateX(-150%); opacity: 0; }
+        .toast-active { transform: translateX(0); opacity: 1; }
     </style>
     
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-background-dark text-white min-h-screen">
+<body class="bg-[#111621] text-white min-h-screen">
+
+    <div id="toast-container" class="fixed top-5 left-5 z-[9999] flex flex-col gap-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="toast-message toast-entrance transition-all duration-500 ease-in-out p-4 rounded-xl shadow-2xl flex items-center gap-4 border-r-4 min-w-[320px] 
+                    {% if message.tags == 'success' %} bg-emerald-900/90 border-emerald-500 text-emerald-100 {% elif message.tags == 'error' %} bg-red-900/90 border-red-500 text-red-100 {% else %} bg-blue-900/90 border-blue-500 text-blue-100 {% endif %}">
+                    
+                    <div class="flex-shrink-0">
+                        <span class="material-symbols-outlined text-2xl">
+                            {% if message.tags == 'success' %} check_circle {% elif message.tags == 'error' %} dangerous {% else %} info {% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="flex-1">
+                        <p class="text-sm font-bold opacity-70">
+                            {% if message.tags == 'success' %} نجاح العمل {% elif message.tags == 'error' %} خطأ في النظام {% else %} تنبيه {% endif %}
+                        </p>
+                        <p class="text-sm">{{ message }}</p>
+                    </div>
+
+                    <button onclick="this.parentElement.remove()" class="hover:opacity-60 transition-opacity">
+                        <span class="material-symbols-outlined text-lg">close</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 
     <div class="flex flex-col min-h-screen">
         {% include 'includes/sidebar.html' %}
@@ -34,6 +65,30 @@
         </main>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toasts = document.querySelectorAll('.toast-message');
+            
+            toasts.forEach((toast, index) => {
+                // ظهور الرسالة بعد تأخير بسيط بناءً على ترتيبها
+                setTimeout(() => {
+                    toast.classList.remove('toast-entrance');
+                    toast.classList.add('toast-active');
+                }, 100 * index + 100);
+
+                // الاختفاء التلقائي بعد 4 ثوانٍ
+                setTimeout(() => {
+                    toast.classList.add('toast-exit');
+                    // حذف العنصر تماماً من DOM بعد انتهاء الحركة
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 500);
+                }, 4000);
+            });
+        });
+    </script>
+
     {% block extra_js %}{% endblock %}
+    
 </body>
 </html>
