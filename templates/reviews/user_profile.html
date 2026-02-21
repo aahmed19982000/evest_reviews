@@ -188,4 +188,45 @@
         }
     }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "mainEntity": {
+    "@type": "Person",
+    "name": "{{ profile_user.name }}",
+    "description": "متداول ومراجع لشركات التداول على منصة {{ meta.site_name|default:'إيفست ريفيوز' }}",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "{{ user_reviews.first.country|default:'AE' }}"
+    },
+    "interactionStatistic": [
+      {
+        "@type": "InteractionCounter",
+        "interactionType": "https://schema.org/WriteAction",
+        "userInteractionCount": "{{ user_reviews.count }}"
+      }
+    ]
+  },
+  "hasPart": [
+    {% for review in user_reviews|slice:":10" %}
+    {
+      "@type": "Review",
+      "headline": "مراجعة لشركة {{ review.company.name|default:'إيفست' }}",
+      "reviewBody": "{{ review.comment|striptags|truncatechars:150 }}",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "{{ review.rating }}",
+        "bestRating": "5"
+      },
+      "itemReviewed": {
+        "@type": "Organization",
+        "name": "{{ review.company.name|default:'Evest' }}"
+      },
+      "datePublished": "{{ review.created_at|date:'Y-m-d' }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
 {% endblock %}
